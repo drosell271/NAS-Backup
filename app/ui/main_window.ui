@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1600</width>
+    <height>960</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1100</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>NAS Backup</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin"><number>14</number></property>
+    <property name="topMargin"><number>12</number></property>
+    <property name="rightMargin"><number>14</number></property>
+   <property name="bottomMargin"><number>12</number></property>
+   <property name="spacing"><number>10</number></property>
+   <item>
+    <layout class="QHBoxLayout" name="brandLayout">
+     <property name="spacing"><number>10</number></property>
+     <item>
+      <widget class="QLabel" name="logoLabel">
+       <property name="minimumSize"><size><width>52</width><height>52</height></size></property>
+       <property name="maximumSize"><size><width>52</width><height>52</height></size></property>
+       <property name="alignment"><set>Qt::AlignCenter</set></property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="brandTextLayout">
+       <property name="spacing"><number>0</number></property>
+       <item>
+        <widget class="QLabel" name="appTitleLabel">
+         <property name="text"><string>NAS Backup</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="appSubtitleLabel">
+         <property name="text"><string>Sincronizacion local hacia NAS</string></property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item><spacer name="brandSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+   </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="toolbarLayout">
+     <property name="spacing"><number>8</number></property>
+     <item>
+      <layout class="QHBoxLayout" name="taskToolbarLayout">
+       <property name="spacing"><number>8</number></property>
+       <item><widget class="QPushButton" name="addButton"><property name="text"><string>Nueva tarea</string></property></widget></item>
+       <item><widget class="QPushButton" name="editButton"><property name="text"><string>Editar</string></property></widget></item>
+       <item><widget class="QPushButton" name="deleteButton"><property name="text"><string>Eliminar</string></property></widget></item>
+       <item><spacer name="taskToolbarSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+       <item><widget class="QPushButton" name="logButton"><property name="text"><string>Ultimo log</string></property></widget></item>
+       <item><widget class="QPushButton" name="historyButton"><property name="text"><string>Historial</string></property></widget></item>
+       <item><widget class="QPushButton" name="exitButton"><property name="text"><string>Salir</string></property></widget></item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="runToolbarLayout">
+       <property name="spacing"><number>8</number></property>
+       <item><widget class="QPushButton" name="runButton"><property name="text"><string>Ejecutar ahora</string></property></widget></item>
+       <item><widget class="QPushButton" name="dryRunButton"><property name="text"><string>Prueba sin copiar</string></property></widget></item>
+       <item><widget class="QPushButton" name="cancelRunButton"><property name="text"><string>Cancelar</string></property></widget></item>
+       <item><widget class="QPushButton" name="pauseButton"><property name="text"><string>Pausar / Reanudar</string></property></widget></item>
+       <item><spacer name="runToolbarSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+       </layout>
+     </item>
+    </layout>
+   </item>
+    <item>
+     <widget class="QTableWidget" name="taskTable">
+      <property name="minimumSize"><size><width>0</width><height>360</height></size></property>
+      <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+      <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+      <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+      <property name="alternatingRowColors"><bool>true</bool></property>
+      <column><property name="text"><string>Nombre</string></property></column>
+      <column><property name="text"><string>Origen</string></property></column>
+      <column><property name="text"><string>Destino</string></property></column>
+      <column><property name="text"><string>Red requerida</string></property></column>
+      <column><property name="text"><string>Estado</string></property></column>
+      <column><property name="text"><string>Ultima ejecucion</string></property></column>
+      <column><property name="text"><string>Ultimo resultado</string></property></column>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="logText">
+      <property name="minimumSize"><size><width>0</width><height>140</height></size></property>
+      <property name="maximumSize"><size><width>16777215</width><height>180</height></size></property>
+      <property name="readOnly"><bool>true</bool></property>
+      <property name="placeholderText"><string>Logs recientes</string></property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <widget class="QLabel" name="statusLabel">
+    <property name="text"><string>Listo</string></property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1400</width><height>21</height></rect>
+   </property>
+   <widget class="QMenu" name="menuArchivo">
+    <property name="title"><string>Archivo</string></property>
+    <addaction name="actionExportConfig"/>
+    <addaction name="actionImportConfig"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHerramientas">
+    <property name="title"><string>Herramientas</string></property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <addaction name="menuArchivo"/>
+   <addaction name="menuHerramientas"/>
+  </widget>
+  <action name="actionSettings"><property name="text"><string>Preferencias</string></property></action>
+  <action name="actionExportConfig"><property name="text"><string>Exportar configuracion</string></property></action>
+  <action name="actionImportConfig"><property name="text"><string>Importar configuracion</string></property></action>
+  <action name="actionExit"><property name="text"><string>Salir</string></property></action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

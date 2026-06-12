@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Local application data
+data/app.db
+data/app.db-*
+data/*.db-journal
+data/logs/*
+!data/logs/.gitkeep
+
+# Generated Qt Python files
+app/ui/*_ui.py
+
+# Build and release artifacts
+build/
+dist/
+installer/
+release/
+
+# PyInstaller
+*.toc
+
+# Editors and Windows
+.idea/
+.vscode/
+*.code-workspace
+Thumbs.db
+Desktop.ini
+*.lnk

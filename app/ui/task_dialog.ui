@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TaskDialog</class>
+ <widget class="QDialog" name="TaskDialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>820</width><height>680</height></rect></property>
+  <property name="minimumSize"><size><width>720</width><height>620</height></size></property>
+  <property name="windowTitle"><string>Tarea de backup</string></property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin"><number>16</number></property>
+   <property name="topMargin"><number>16</number></property>
+   <property name="rightMargin"><number>16</number></property>
+   <property name="bottomMargin"><number>16</number></property>
+   <property name="spacing"><number>12</number></property>
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <property name="horizontalSpacing"><number>12</number></property>
+     <property name="verticalSpacing"><number>10</number></property>
+     <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set></property>
+     <item row="0" column="0"><widget class="QLabel" name="nameLabel"><property name="text"><string>Nombre</string></property></widget></item>
+     <item row="0" column="1"><widget class="QLineEdit" name="nameEdit"/></item>
+     <item row="1" column="0"><widget class="QLabel" name="sourceLabel"><property name="text"><string>Carpeta origen</string></property></widget></item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="sourceLayout">
+       <item><widget class="QLineEdit" name="sourceEdit"/></item>
+       <item><widget class="QPushButton" name="browseSourceButton"><property name="text"><string>Buscar</string></property></widget></item>
+      </layout>
+     </item>
+     <item row="2" column="0"><widget class="QLabel" name="destinationLabel"><property name="text"><string>Carpeta destino</string></property></widget></item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="destinationLayout">
+       <item><widget class="QLineEdit" name="destinationEdit"/></item>
+       <item><widget class="QPushButton" name="browseDestinationButton"><property name="text"><string>Buscar</string></property></widget></item>
+      </layout>
+     </item>
+     <item row="3" column="0"><widget class="QLabel" name="serverIpLabel"><property name="text"><string>IP servidor</string></property></widget></item>
+     <item row="3" column="1"><widget class="QLineEdit" name="serverIpEdit"/></item>
+     <item row="4" column="0"><widget class="QLabel" name="networkLabel"><property name="text"><string>Red requerida</string></property></widget></item>
+     <item row="4" column="1">
+      <layout class="QHBoxLayout" name="networkLayout">
+       <property name="spacing"><number>8</number></property>
+       <item><widget class="QComboBox" name="networkCombo"><property name="editable"><bool>false</bool></property></widget></item>
+       <item><widget class="QPushButton" name="refreshNetworksButton"><property name="text"><string>Escanear</string></property></widget></item>
+      </layout>
+     </item>
+     <item row="5" column="0"><widget class="QLabel" name="modeLabel"><property name="text"><string>Modo</string></property></widget></item>
+     <item row="5" column="1"><widget class="QComboBox" name="modeCombo"/></item>
+     <item row="6" column="0"><widget class="QLabel" name="intervalLabel"><property name="text"><string>Intervalo minutos</string></property></widget></item>
+     <item row="6" column="1"><widget class="QComboBox" name="intervalCombo"/></item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="checksLayout">
+     <property name="horizontalSpacing"><number>16</number></property>
+     <property name="verticalSpacing"><number>8</number></property>
+     <item row="0" column="0"><widget class="QCheckBox" name="enabledCheck"><property name="text"><string>Tarea habilitada</string></property><property name="checked"><bool>true</bool></property></widget></item>
+     <item row="0" column="1"><widget class="QCheckBox" name="mirrorDeleteCheck"><property name="text"><string>Borrar en destino lo borrado en origen</string></property></widget></item>
+     <item row="1" column="0"><widget class="QCheckBox" name="dryRunCheck"><property name="text"><string>Modo prueba persistente</string></property></widget></item>
+    </layout>
+   </item>
+   <item><widget class="QLabel" name="exclusionsLabel"><property name="text"><string>Exclusiones</string></property></widget></item>
+   <item>
+    <widget class="QPlainTextEdit" name="exclusionsEdit">
+     <property name="minimumSize"><size><width>0</width><height>120</height></size></property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonLayout">
+     <property name="spacing"><number>8</number></property>
+     <item><widget class="QPushButton" name="testConnectionButton"><property name="text"><string>Probar conexion</string></property></widget></item>
+     <item><spacer name="buttonSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+     <item><widget class="QPushButton" name="saveButton"><property name="text"><string>Guardar</string></property></widget></item>
+     <item><widget class="QPushButton" name="cancelButton"><property name="text"><string>Cancelar</string></property></widget></item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
