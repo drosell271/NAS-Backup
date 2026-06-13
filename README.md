@@ -2,6 +2,10 @@
 
 Aplicacion de escritorio para Windows que sincroniza carpetas locales hacia una carpeta de red o NAS mediante `robocopy`.
 
+## Captura de pantalla
+
+![Interfaz principal de NAS Backup](docs/Captura%20de%20pantalla.png)
+
 ## Instalar
 
 Ejecuta:
