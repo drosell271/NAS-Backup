@@ -57,4 +57,4 @@ Carpeta local -> NAS
 - Acceso de escritura a la carpeta de destino.
 - `robocopy`, incluido en Windows.
 
-Version del instalador: `1.0.2`.
+Version del instalador: `1.1.0`.
