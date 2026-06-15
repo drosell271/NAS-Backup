@@ -6,7 +6,10 @@ from pathlib import Path
 
 
 APP_NAME = "NAS Backup"
+APP_VERSION = "1.1.0"
 RUN_REGISTRY_NAME = "NASBackupApp"
+GITHUB_REPOSITORY = "drosell271/NAS-Backup"
+GITHUB_RELEASES_URL = f"https://github.com/{GITHUB_REPOSITORY}/releases"
 
 
 def base_dir() -> Path:
@@ -69,8 +72,10 @@ DEFAULT_SETTINGS = {
     "max_parallel_tasks": "2",
     "notify_on_success": "1",
     "notify_on_error": "1",
-    "default_debounce_seconds": "5",
+    "default_debounce_seconds": "60",
     "log_retention_days": "30",
+    "check_updates": "1",
+    "last_update_check_at": "",
 }
 
 

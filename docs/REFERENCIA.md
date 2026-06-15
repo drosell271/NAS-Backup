@@ -10,7 +10,8 @@ Antes de copiar, la aplicacion comprueba:
 4. El usuario puede escribir en el destino.
 5. Hay espacio libre suficiente cuando Windows puede calcularlo.
 
-El ping al servidor se usa como informacion adicional. Si el destino es accesible pero el servidor bloquea ping, la copia puede continuar.
+Si se configura una red requerida, debe coincidir con la red WiFi, el perfil de
+conexion o la interfaz activa. No se utiliza ping ni se almacena una IP del NAS.
 
 ## Comando de copia
 
@@ -72,10 +73,6 @@ La carpeta puede ser visible pero estar configurada como solo lectura para el us
 
 Prueba a crear y borrar manualmente un archivo dentro del destino con el mismo usuario de Windows.
 
-## El ping no responde
-
-Algunos servidores bloquean ICMP. Si la ruta destino es accesible y permite escritura, la tarea puede ejecutarse aunque el ping no responda.
-
 ## Robocopy devuelve advertencia
 
 Los codigos `2-7` no siempre indican un fallo. Pueden significar que existen archivos extra o diferencias entre origen y destino.
@@ -93,7 +90,21 @@ Comprueba:
 
 La copia no empieza inmediatamente: espera el tiempo configurado para agrupar cambios consecutivos.
 
-El valor predeterminado es de 5 segundos. El observador funciona mientras la aplicacion permanece abierta, incluida la bandeja del sistema.
+El valor predeterminado es de 60 segundos. El observador funciona mientras la aplicacion permanece abierta, incluida la bandeja del sistema.
+
+## Proteccion de rutas
+
+La aplicacion rechaza tareas donde origen y destino sean iguales o una ruta este
+dentro de la otra. El modo espejo tambien bloquea raices de unidad y la raiz de
+un recurso compartido UNC. Estas comprobaciones se aplican tanto al editar como
+al importar configuraciones.
+
+## Actualizaciones
+
+La aplicacion consulta la ultima release estable del repositorio de GitHub al
+arrancar y despues, como maximo, una vez al dia. La comprobacion automatica se
+puede desactivar en Preferencias. La consulta manual esta disponible en el menu
+Herramientas.
 
 ## Aparecen ventanas de consola
 

@@ -28,6 +28,10 @@ Cierra NAS Backup y ejecuta una version nueva del instalador.
 
 La actualizacion reemplaza los archivos del programa y conserva tareas, preferencias, historial y logs.
 
+NAS Backup puede avisar cuando exista una release estable de GitHub con una
+version superior a la instalada. La descarga e instalacion siguen siendo
+manuales.
+
 ## Desinstalar
 
 Se puede desinstalar desde:

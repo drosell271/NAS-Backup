@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 from PyQt5 import uic
 from PyQt5.QtCore import QObject, QRunnable, QSize, QThreadPool, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox, QPushButton
@@ -129,7 +127,6 @@ class TaskDialog(QDialog):
         self.nameEdit.setText(task.name)
         self.sourceEdit.setText(task.source_path)
         self.destinationEdit.setText(task.destination_path)
-        self.serverIpEdit.setText(task.server_ip)
         self._set_network(task.required_network or "")
         index = self.modeCombo.findData(task.mode)
         self.modeCombo.setCurrentIndex(max(0, index))
@@ -181,13 +178,6 @@ class TaskDialog(QDialog):
             QMessageBox.warning(self, "Validacion", error)
             return
         if task.mirror_delete:
-            if is_dangerous_mirror_destination(task.destination_path):
-                QMessageBox.critical(
-                    self,
-                    "Destino no permitido",
-                    "El destino es demasiado general para usar borrado espejo.",
-                )
-                return
             answer = QMessageBox.warning(
                 self,
                 "Confirmar borrado espejo",
@@ -215,7 +205,6 @@ class TaskDialog(QDialog):
             name=self.nameEdit.text().strip(),
             source_path=self.sourceEdit.text().strip(),
             destination_path=self.destinationEdit.text().strip(),
-            server_ip=self.serverIpEdit.text().strip(),
             required_network=str(network).strip() or None,
             mode=mode,
             interval_minutes=interval,
@@ -230,16 +219,3 @@ class TaskDialog(QDialog):
             created_at=self.task.created_at if self.task else None,
             updated_at=self.task.updated_at if self.task else None,
         )
-
-
-def is_dangerous_mirror_destination(destination: str) -> bool:
-    dest = destination.strip().replace("/", "\\").rstrip("\\")
-    if not dest:
-        return True
-    drive, tail = os.path.splitdrive(dest)
-    if drive and not tail.strip("\\"):
-        return True
-    if dest.startswith("\\\\"):
-        parts = [part for part in dest.split("\\") if part]
-        return len(parts) <= 2
-    return False

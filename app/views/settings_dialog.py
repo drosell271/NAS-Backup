@@ -38,8 +38,9 @@ class SettingsDialog(QDialog):
         self.maxParallelSpin.setValue(_int_setting(self.settings, "max_parallel_tasks", 2))
         self.notifySuccessCheck.setChecked(self.settings.get("notify_on_success", "1") == "1")
         self.notifyErrorCheck.setChecked(self.settings.get("notify_on_error", "1") == "1")
-        self.debounceSpin.setValue(_int_setting(self.settings, "default_debounce_seconds", 5))
+        self.debounceSpin.setValue(_int_setting(self.settings, "default_debounce_seconds", 60))
         self.retentionSpin.setValue(_int_setting(self.settings, "log_retention_days", 30))
+        self.checkUpdatesCheck.setChecked(self.settings.get("check_updates", "1") == "1")
 
     def accept(self) -> None:
         values = {
@@ -50,11 +51,16 @@ class SettingsDialog(QDialog):
             "notify_on_error": "1" if self.notifyErrorCheck.isChecked() else "0",
             "default_debounce_seconds": str(self.debounceSpin.value()),
             "log_retention_days": str(self.retentionSpin.value()),
+            "check_updates": "1" if self.checkUpdatesCheck.isChecked() else "0",
         }
         try:
             main_path = BASE_DIR / "main.py"
             if values["start_with_windows"] == "1":
-                autostart.enable_autostart(autostart.build_autostart_command(Path(main_path)))
+                command = autostart.build_autostart_command(
+                    Path(main_path),
+                    minimized=values["start_minimized"] == "1",
+                )
+                autostart.enable_autostart(command)
             else:
                 autostart.disable_autostart()
         except OSError as exc:

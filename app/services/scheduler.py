@@ -92,9 +92,9 @@ class ChangeWatcher(QObject):
         self.stop()
         settings = self.database.get_settings()
         try:
-            debounce_seconds = max(1, int(settings.get("default_debounce_seconds", "5")))
+            debounce_seconds = max(1, int(settings.get("default_debounce_seconds", "60")))
         except ValueError:
-            debounce_seconds = 5
+            debounce_seconds = 60
 
         try:
             from watchdog.observers import Observer

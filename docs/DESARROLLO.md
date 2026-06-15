@@ -102,7 +102,13 @@ La version mostrada por Windows se define en:
 packaging\windows\installer.iss
 ```
 
-Actualiza `MyAppVersion` antes de publicar una nueva version.
+La version utilizada por el comprobador de actualizaciones se define en:
+
+```text
+app\config.py
+```
+
+Actualiza `MyAppVersion` y `APP_VERSION` antes de publicar una nueva version.
 
 ## Archivos generados
 

@@ -8,7 +8,8 @@ from app.models import TASK_MODES, Task, exclusions_to_json, now_iso
 from app.validation import validate_task_data
 
 
-EXPORT_VERSION = 1
+EXPORT_VERSION = 2
+SUPPORTED_IMPORT_VERSIONS = {1, 2}
 
 
 def export_config(database: Database, path: str | Path) -> None:
@@ -19,9 +20,11 @@ def export_config(database: Database, path: str | Path) -> None:
         data.pop("last_success_at", None)
         data.pop("last_error", None)
         tasks.append(data)
+    settings = database.get_settings()
+    settings.pop("last_update_check_at", None)
     payload = {
         "version": EXPORT_VERSION,
-        "settings": database.get_settings(),
+        "settings": settings,
         "tasks": tasks,
     }
     Path(path).write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -29,25 +32,33 @@ def export_config(database: Database, path: str | Path) -> None:
 
 def import_config(database: Database, path: str | Path) -> int:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    if payload.get("version") != EXPORT_VERSION:
+    if not isinstance(payload, dict):
+        raise ValueError("El archivo de configuracion debe contener un objeto JSON")
+    if payload.get("version") not in SUPPORTED_IMPORT_VERSIONS:
         raise ValueError("Version de configuracion no soportada")
     settings = payload.get("settings")
-    if isinstance(settings, dict):
-        database.set_settings({str(key): str(value) for key, value in settings.items()})
+    if settings is None:
+        settings = {}
+    if not isinstance(settings, dict):
+        raise ValueError("La seccion de preferencias no es valida")
+    imported_settings = {str(key): str(value) for key, value in settings.items()}
 
     existing_names = database.task_names()
-    created = 0
-    for item in payload.get("tasks", []):
+    task_items = payload.get("tasks", [])
+    if not isinstance(task_items, list):
+        raise ValueError("La seccion de tareas no es valida")
+    tasks: list[Task] = []
+    for item in task_items:
         if not isinstance(item, dict):
-            continue
+            raise ValueError("Una de las tareas importadas no es valida")
         task = _task_from_import(item, existing_names)
         error = validate_task_data(task, require_existing_source=False)
         if error:
             raise ValueError(f"Tarea importada no valida ({task.name}): {error}")
-        database.create_task(task)
         existing_names.add(task.name)
-        created += 1
-    return created
+        tasks.append(task)
+    database.import_configuration(imported_settings, tasks)
+    return len(tasks)
 
 
 def _task_from_import(item: dict, existing_names: set[str]) -> Task:
@@ -55,7 +66,6 @@ def _task_from_import(item: dict, existing_names: set[str]) -> Task:
     name = _unique_name(raw_name, existing_names) if raw_name else ""
     source_path = str(item.get("source_path", "")).strip()
     destination_path = str(item.get("destination_path", "")).strip()
-    server_ip = str(item.get("server_ip", "")).strip()
     mode = str(item.get("mode", "manual")).strip()
     if mode not in TASK_MODES:
         mode = "manual"
@@ -73,7 +83,6 @@ def _task_from_import(item: dict, existing_names: set[str]) -> Task:
         name=name,
         source_path=source_path,
         destination_path=destination_path,
-        server_ip=server_ip,
         required_network=str(item.get("required_network") or "").strip() or None,
         mode=mode,
         interval_minutes=interval,

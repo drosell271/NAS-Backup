@@ -38,7 +38,6 @@ class Database:
                   name TEXT NOT NULL,
                   source_path TEXT NOT NULL,
                   destination_path TEXT NOT NULL,
-                  server_ip TEXT NOT NULL,
                   required_network TEXT,
                   mode TEXT NOT NULL,
                   interval_minutes INTEGER,
@@ -86,6 +85,26 @@ class Database:
                         ("5", "default_debounce_seconds"),
                     )
                 conn.execute("PRAGMA user_version = 1")
+                schema_version = 1
+            if schema_version < 2:
+                columns = {
+                    row["name"] for row in conn.execute("PRAGMA table_info(tasks)").fetchall()
+                }
+                if "server_ip" in columns:
+                    conn.execute("ALTER TABLE tasks DROP COLUMN server_ip")
+                conn.execute("PRAGMA user_version = 2")
+                schema_version = 2
+            if schema_version < 3:
+                debounce = conn.execute(
+                    "SELECT value FROM settings WHERE key = ?",
+                    ("default_debounce_seconds",),
+                ).fetchone()
+                if debounce is not None and debounce["value"] == "5":
+                    conn.execute(
+                        "UPDATE settings SET value = ? WHERE key = ?",
+                        ("60", "default_debounce_seconds"),
+                    )
+                conn.execute("PRAGMA user_version = 3")
             for key, value in DEFAULT_SETTINGS.items():
                 conn.execute(
                     "INSERT OR IGNORE INTO settings(key, value) VALUES(?, ?)",
@@ -103,26 +122,29 @@ class Database:
         return Task.from_row(row) if row else None
 
     def create_task(self, task: Task) -> int:
+        with self.connection() as conn:
+            return self._insert_task(conn, task)
+
+    def _insert_task(self, conn: sqlite3.Connection, task: Task) -> int:
         values = task.as_db_dict()
         created_at = now_iso()
-        with self.connection() as conn:
-            cursor = conn.execute(
-                """
-                INSERT INTO tasks (
-                    name, source_path, destination_path, server_ip, required_network,
-                    mode, interval_minutes, watch_changes, enabled, mirror_delete,
-                    dry_run, exclude_patterns, last_run_at, last_success_at, last_error,
-                    created_at, updated_at
-                ) VALUES (
-                    :name, :source_path, :destination_path, :server_ip, :required_network,
-                    :mode, :interval_minutes, :watch_changes, :enabled, :mirror_delete,
-                    :dry_run, :exclude_patterns, :last_run_at, :last_success_at, :last_error,
-                    :created_at, :updated_at
-                )
-                """,
-                values | {"created_at": created_at, "updated_at": created_at},
+        cursor = conn.execute(
+            """
+            INSERT INTO tasks (
+                name, source_path, destination_path, required_network,
+                mode, interval_minutes, watch_changes, enabled, mirror_delete,
+                dry_run, exclude_patterns, last_run_at, last_success_at, last_error,
+                created_at, updated_at
+            ) VALUES (
+                :name, :source_path, :destination_path, :required_network,
+                :mode, :interval_minutes, :watch_changes, :enabled, :mirror_delete,
+                :dry_run, :exclude_patterns, :last_run_at, :last_success_at, :last_error,
+                :created_at, :updated_at
             )
-            return int(cursor.lastrowid)
+            """,
+            values | {"created_at": created_at, "updated_at": created_at},
+        )
+        return int(cursor.lastrowid)
 
     def update_task(self, task: Task) -> None:
         if task.id is None:
@@ -135,7 +157,6 @@ class Database:
                 SET name = :name,
                     source_path = :source_path,
                     destination_path = :destination_path,
-                    server_ip = :server_ip,
                     required_network = :required_network,
                     mode = :mode,
                     interval_minutes = :interval_minutes,
@@ -245,6 +266,20 @@ class Database:
                     """,
                     (key, value),
                 )
+
+    def import_configuration(self, settings: dict[str, str], tasks: list[Task]) -> None:
+        with self.connection() as conn:
+            for key, value in settings.items():
+                conn.execute(
+                    """
+                    INSERT INTO settings(key, value)
+                    VALUES(?, ?)
+                    ON CONFLICT(key) DO UPDATE SET value = excluded.value
+                    """,
+                    (key, value),
+                )
+            for task in tasks:
+                self._insert_task(conn, task)
 
     def task_names(self) -> set[str]:
         with self.connection() as conn:

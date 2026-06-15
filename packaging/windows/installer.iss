@@ -1,5 +1,5 @@
 #define MyAppName "NAS Backup"
-#define MyAppVersion "1.0.2"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "NAS Backup"
 #define MyAppExeName "NAS Backup.exe"
 

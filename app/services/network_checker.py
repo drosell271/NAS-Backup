@@ -12,23 +12,6 @@ from app.services.process_utils import hidden_process_kwargs
 LOW_SPACE_THRESHOLD_BYTES = 1024 * 1024 * 1024
 
 
-def ping_host(ip: str, timeout_ms: int = 1000) -> bool:
-    if not ip.strip():
-        return False
-    try:
-        result = subprocess.run(
-            ["ping", "-n", "1", "-w", str(timeout_ms), ip],
-            capture_output=True,
-            text=True,
-            timeout=max(2, timeout_ms / 1000 + 1),
-            check=False,
-            **hidden_process_kwargs(),
-        )
-    except (OSError, subprocess.SubprocessError):
-        return False
-    return result.returncode == 0
-
-
 def get_current_wifi_ssid() -> str | None:
     try:
         result = subprocess.run(
@@ -189,7 +172,7 @@ def is_required_network_active(required_network: str | None) -> bool:
     ssid = get_current_wifi_ssid()
     if ssid and ssid.lower() == expected:
         return True
-    return expected in {profile.lower() for profile in get_current_network_profiles()}
+    return expected in {profile.lower() for profile in get_active_network_profiles()}
 
 
 def is_destination_accessible(path: str) -> bool:
@@ -248,6 +231,4 @@ def can_run_task(task) -> tuple[bool, str]:
         return False, "Destino no accesible"
     if not is_destination_writable(task.destination_path):
         return False, "Sin permiso de escritura en destino"
-    if not ping_host(task.server_ip):
-        return True, "Destino accesible; el ping no responde"
     return True, "Lista para ejecutar"

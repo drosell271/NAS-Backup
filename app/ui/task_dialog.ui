@@ -32,20 +32,18 @@
        <item><widget class="QPushButton" name="browseDestinationButton"><property name="text"><string>Buscar</string></property></widget></item>
       </layout>
      </item>
-     <item row="3" column="0"><widget class="QLabel" name="serverIpLabel"><property name="text"><string>IP servidor</string></property></widget></item>
-     <item row="3" column="1"><widget class="QLineEdit" name="serverIpEdit"/></item>
-     <item row="4" column="0"><widget class="QLabel" name="networkLabel"><property name="text"><string>Red requerida</string></property></widget></item>
-     <item row="4" column="1">
+     <item row="3" column="0"><widget class="QLabel" name="networkLabel"><property name="text"><string>Red requerida</string></property></widget></item>
+     <item row="3" column="1">
       <layout class="QHBoxLayout" name="networkLayout">
        <property name="spacing"><number>8</number></property>
        <item><widget class="QComboBox" name="networkCombo"><property name="editable"><bool>false</bool></property></widget></item>
        <item><widget class="QPushButton" name="refreshNetworksButton"><property name="text"><string>Escanear</string></property></widget></item>
       </layout>
      </item>
-     <item row="5" column="0"><widget class="QLabel" name="modeLabel"><property name="text"><string>Modo</string></property></widget></item>
-     <item row="5" column="1"><widget class="QComboBox" name="modeCombo"/></item>
-     <item row="6" column="0"><widget class="QLabel" name="intervalLabel"><property name="text"><string>Intervalo minutos</string></property></widget></item>
-     <item row="6" column="1"><widget class="QComboBox" name="intervalCombo"/></item>
+     <item row="4" column="0"><widget class="QLabel" name="modeLabel"><property name="text"><string>Modo</string></property></widget></item>
+     <item row="4" column="1"><widget class="QComboBox" name="modeCombo"/></item>
+     <item row="5" column="0"><widget class="QLabel" name="intervalLabel"><property name="text"><string>Intervalo minutos</string></property></widget></item>
+     <item row="5" column="1"><widget class="QComboBox" name="intervalCombo"/></item>
     </layout>
    </item>
    <item>

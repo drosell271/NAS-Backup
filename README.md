@@ -20,7 +20,7 @@ La instalacion se realiza para el usuario actual y no requiere permisos de admin
 
 1. Pulsa **Nueva tarea**.
 2. Selecciona la carpeta local y el destino de red.
-3. Indica el servidor y, si es necesario, la red requerida.
+3. Selecciona, si es necesario, la red requerida.
 4. Guarda la tarea.
 5. Usa **Prueba sin copiar** antes del primer backup.
 6. Pulsa **Ejecutar ahora**.
@@ -40,6 +40,7 @@ Carpeta local -> NAS
 - Historial y logs por ejecucion.
 - Bandeja del sistema y arranque con Windows.
 - Importacion y exportacion de configuracion.
+- Aviso de nuevas versiones publicadas en GitHub.
 
 ## Documentacion
 

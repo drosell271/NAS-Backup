@@ -53,7 +53,6 @@ class Task:
     name: str
     source_path: str
     destination_path: str
-    server_ip: str
     required_network: str | None
     mode: str
     interval_minutes: int | None
@@ -75,7 +74,6 @@ class Task:
             name=row["name"],
             source_path=row["source_path"],
             destination_path=row["destination_path"],
-            server_ip=row["server_ip"],
             required_network=row["required_network"],
             mode=row["mode"],
             interval_minutes=row["interval_minutes"],
@@ -99,7 +97,6 @@ class Task:
             "name": self.name,
             "source_path": self.source_path,
             "destination_path": self.destination_path,
-            "server_ip": self.server_ip,
             "required_network": self.required_network or None,
             "mode": self.mode,
             "interval_minutes": self.interval_minutes,

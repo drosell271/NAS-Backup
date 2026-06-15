@@ -8,6 +8,7 @@ from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtWidgets import QApplication
 
 from app.config import APP_NAME, asset_path, ensure_directories
+from app.services.single_instance import SingleInstance
 from app.theme import apply_dark_theme
 from app.views.main_window import MainWindow
 
@@ -25,6 +26,9 @@ def main() -> int:
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
+    single_instance = SingleInstance()
+    if not single_instance.acquire():
+        return 0
     app.setFont(QFont("Segoe UI", 10))
     icon_file = asset_path("icon.ico")
     if icon_file:
@@ -32,6 +36,8 @@ def main() -> int:
     app.setQuitOnLastWindowClosed(False)
     apply_dark_theme(app)
     window = MainWindow(minimized=args.minimized)
+    single_instance.activation_requested.connect(window.show_normal)
+    app.single_instance = single_instance
     app.main_window = window
     return app.exec_()
 

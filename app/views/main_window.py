@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import webbrowser
 from pathlib import Path
 
 from PyQt5 import uic
@@ -30,6 +31,7 @@ from app.services.notifications import notify
 from app.services.scheduler import ChangeWatcher, IntervalScheduler
 from app.services.task_manager import TaskManager
 from app.services.tray import TrayService
+from app.services.update_checker import UpdateChecker, UpdateResult
 from app.views.settings_dialog import SettingsDialog
 from app.views.task_dialog import TaskDialog
 
@@ -70,6 +72,7 @@ class MainWindow(QMainWindow):
         self.scheduler = IntervalScheduler(self.database, self.task_manager)
         self.change_watcher = ChangeWatcher(self.database, self.task_manager)
         self.tray = TrayService(self, self.task_manager)
+        self.update_checker = UpdateChecker(self.database)
         self.exiting = False
         self._setup_ui()
         self._connect()
@@ -77,6 +80,7 @@ class MainWindow(QMainWindow):
         self.scheduler.start()
         self.change_watcher.restart()
         self.tray.show()
+        self.update_checker.start()
         if not minimized:
             self._show_initial_window()
 
@@ -170,6 +174,7 @@ class MainWindow(QMainWindow):
         self.historyButton.clicked.connect(self.show_history)
         self.exitButton.clicked.connect(self.exit_application)
         self.actionSettings.triggered.connect(self.open_settings)
+        self.actionCheckUpdates.triggered.connect(self.check_for_updates)
         self.actionExportConfig.triggered.connect(self.export_configuration)
         self.actionImportConfig.triggered.connect(self.import_configuration)
         self.actionExit.triggered.connect(self.exit_application)
@@ -178,6 +183,8 @@ class MainWindow(QMainWindow):
         self.task_manager.status_changed.connect(self._on_status_changed)
         self.task_manager.log_message.connect(self.append_log)
         self.task_manager.run_finished.connect(self._on_run_finished)
+        self.update_checker.checked.connect(self._on_update_checked)
+        self.update_checker.failed.connect(self._on_update_check_failed)
 
     def _cleanup_logs(self) -> None:
         settings = self.database.get_settings()
@@ -298,6 +305,51 @@ class MainWindow(QMainWindow):
             self.task_manager.reload_settings()
             self.change_watcher.restart()
             self._cleanup_logs()
+            self.update_checker.check_automatic()
+
+    def check_for_updates(self) -> None:
+        self.statusLabel.setText("Buscando actualizaciones...")
+        self.update_checker.check_manual()
+
+    def _on_update_checked(self, result: UpdateResult, manual: bool) -> None:
+        if result.update_available:
+            message = (
+                f"Hay una nueva version disponible: {result.latest_version}. "
+                f"Version instalada: {result.current_version}."
+            )
+            self.append_log(message)
+            if manual:
+                answer = QMessageBox.question(
+                    self,
+                    "Actualizacion disponible",
+                    f"{message}\n\nAbrir la pagina de la release?",
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.Yes,
+                )
+                if answer == QMessageBox.Yes:
+                    webbrowser.open(result.release_url)
+            else:
+                self.tray.icon.showMessage(
+                    "Actualizacion disponible",
+                    message,
+                    self.tray.icon.Information,
+                    10000,
+                )
+            return
+        if manual:
+            QMessageBox.information(
+                self,
+                "Actualizaciones",
+                f"NAS Backup {result.current_version} es la version mas reciente.",
+            )
+        self.statusLabel.setText("No hay actualizaciones disponibles")
+
+    def _on_update_check_failed(self, message: str, manual: bool) -> None:
+        text = f"No se pudo comprobar si hay actualizaciones: {message}"
+        self.append_log(text)
+        if manual:
+            QMessageBox.warning(self, "Actualizaciones", text)
+        self.statusLabel.setText("Error al buscar actualizaciones")
 
     def export_configuration(self) -> None:
         path, _ = QFileDialog.getSaveFileName(self, "Exportar configuracion", "", "JSON (*.json)")
@@ -374,6 +426,7 @@ class MainWindow(QMainWindow):
         if self.exiting:
             self.change_watcher.stop()
             self.scheduler.stop()
+            self.update_checker.stop()
             event.accept()
             return
         event.ignore()
@@ -385,6 +438,7 @@ class MainWindow(QMainWindow):
         self.tray.icon.hide()
         self.change_watcher.stop()
         self.scheduler.stop()
+        self.update_checker.stop()
         self.task_manager.shutdown()
         self.close()
         QApplication.quit()

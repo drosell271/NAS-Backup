@@ -32,11 +32,12 @@ def is_autostart_enabled() -> bool:
         return False
 
 
-def build_autostart_command(main_path: Path) -> str:
+def build_autostart_command(main_path: Path, minimized: bool = False) -> str:
+    minimized_argument = " --minimized" if minimized else ""
     if getattr(sys, "frozen", False):
-        return f'"{sys.executable}" --minimized'
+        return f'"{sys.executable}"{minimized_argument}'
     executable = Path(sys.executable)
     pythonw = executable.with_name("pythonw.exe")
     if pythonw.exists():
         executable = pythonw
-    return f'"{executable}" "{main_path}" --minimized'
+    return f'"{executable}" "{main_path}"{minimized_argument}'

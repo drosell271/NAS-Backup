@@ -7,7 +7,6 @@ Pulsa **Nueva tarea** y completa:
 - **Nombre**: identificador visible de la tarea.
 - **Carpeta origen**: carpeta local que se quiere copiar.
 - **Carpeta destino**: ruta local, unidad de red o ruta UNC del NAS.
-- **IP servidor**: direccion utilizada para comprobar el servidor.
 - **Red requerida**: red WiFi, perfil de red o conexion cableada necesaria.
 - **Modo**: define cuando se ejecuta la tarea.
 - **Exclusiones**: un patron por linea.
@@ -81,6 +80,11 @@ En **Herramientas > Preferencias** se configura:
 - Notificaciones.
 - Espera tras detectar cambios.
 - Retencion de logs.
+- Comprobacion automatica de actualizaciones.
+
+La comprobacion se realiza al iniciar la aplicacion y, mientras permanece abierta,
+como maximo una vez al dia. Tambien puede ejecutarse manualmente desde
+**Herramientas > Buscar actualizaciones**.
 
 ## Exportar e importar
 
@@ -98,6 +102,6 @@ Para activarla:
 
 La aplicacion observa de forma recursiva la carpeta origen. Al crear, modificar, mover o eliminar un archivo, reinicia un contador corto y ejecuta la tarea cuando dejan de llegar cambios.
 
-La espera predeterminada es de 5 segundos y se modifica en **Herramientas > Preferencias**. Esto evita iniciar una copia distinta por cada archivo cuando un programa guarda varios elementos a la vez.
+La espera predeterminada es de 60 segundos y se modifica en **Herramientas > Preferencias**. Esto evita iniciar una copia distinta por cada archivo cuando un programa guarda varios elementos a la vez.
 
 Si se detectan cambios durante una copia, se programa otra ejecucion al terminar. Si el NAS no esta disponible, la tarea se reintenta automaticamente.

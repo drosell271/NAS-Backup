@@ -125,12 +125,14 @@
    </widget>
    <widget class="QMenu" name="menuHerramientas">
     <property name="title"><string>Herramientas</string></property>
+    <addaction name="actionCheckUpdates"/>
     <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuHerramientas"/>
   </widget>
   <action name="actionSettings"><property name="text"><string>Preferencias</string></property></action>
+  <action name="actionCheckUpdates"><property name="text"><string>Buscar actualizaciones</string></property></action>
   <action name="actionExportConfig"><property name="text"><string>Exportar configuracion</string></property></action>
   <action name="actionImportConfig"><property name="text"><string>Importar configuracion</string></property></action>
   <action name="actionExit"><property name="text"><string>Salir</string></property></action>
